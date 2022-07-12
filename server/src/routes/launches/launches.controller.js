@@ -1,20 +1,20 @@
 const {
   getAlllaunches,
-  addNewlaunch,
+  saveNewlaunch,
   launchexist,
   abortlaunchbyid
 } = require("../../models/launches.model")
 
-function httpGetAlllaunches(req, res) {
-  res.status(200).json(getAlllaunches())
+async function httpGetAlllaunches(req, res) {
+  res.status(200).json(await getAlllaunches())
 }
 
-function httpAddnewlaunch(req, res) {
+async function httpAddnewlaunch(req, res) {
   const launch = req.body
 
   if (!launch.launchDate || !launch.target || !launch.mission || !launch.rocket) {
     return res.status(400).json({
-      error: "mission required launch property"
+      error: "missing required launch property"
     })
   }
   launch.launchDate = new Date(launch.launchDate)
@@ -24,20 +24,28 @@ function httpAddnewlaunch(req, res) {
     })
   }
 
-  addNewlaunch(launch)
+  await saveNewlaunch(launch)
   res.status(201).json(launch)
 }
 
-function httpAbortlaunch(req, res) {
+async function httpAbortlaunch(req, res) {
   const launchid = Number(req.params.id)
 
-  if (!launchexist(launchid)) {
+  const validlaunch = await launchexist(launchid)
+  if (!validlaunch) {
     return res.status(404).json({
       error: "launch not found"
     })
   }
-  const aborted = abortlaunchbyid(launchid)
-  return res.status(200).json(aborted)
+  const aborted = await abortlaunchbyid(launchid)
+  if (!aborted) {
+    return res.status(400).json({
+      error: "launch not aborted"
+    })
+  }
+  return res.status(200).json({
+    ok: true
+  })
 }
 
 module.exports = { httpGetAlllaunches, httpAddnewlaunch, httpAbortlaunch }
