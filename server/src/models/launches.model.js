@@ -6,17 +6,6 @@ const planets = require("./planets.mongo")
 const DEFAULT_FLIGHTNUMBER = 100
 const SPACEXURL = "https://api.spacexdata.com/v4/launches/query"
 
-const launch = {
-  flightNumber: 100,
-  mission: "Kepler Exploration X",
-  rocket: "Exploration IS1",
-  launchDate: new Date("December 27, 2033"),
-  target: "Kepler-442 b",
-  customers: ["NASA", "SPACE X"],
-  upcoming: true,
-  success: true
-}
-saveLaunch(launch)
 async function populatelaunches() {
   const response = await axios.post(SPACEXURL, {
     query: {},
@@ -91,8 +80,12 @@ async function getLatestFlightNumber() {
   return latestLaunch.flightNumber
 }
 
-async function getAlllaunches() {
-  return await launchesDatabase.find({}, { _id: 0, __v: 0 })
+async function getAlllaunches(skip, limit) {
+  return await launchesDatabase
+    .find({}, { _id: 0, __v: 0 })
+    .sort({ flightNumber: 1 })
+    .skip(skip)
+    .limit(limit)
 }
 
 async function saveNewlaunch(launch) {
