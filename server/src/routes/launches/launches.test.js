@@ -1,10 +1,14 @@
 require("dotenv").config()
 const request = require("supertest")
 const app = require("../../app")
+const { loadLaunchData } = require("../../models/launches.model")
 const { mongoconnect, mongodisconnect } = require("../../services/mongo")
 
 describe("Launches API", () => {
-  beforeAll(async () => await mongoconnect())
+  beforeAll(async () => {
+    await mongoconnect()
+    await loadLaunchData()
+  })
   afterAll(async () => await mongodisconnect())
 
   describe("Test GET /launches", () => {

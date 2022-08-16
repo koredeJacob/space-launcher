@@ -9,13 +9,10 @@
     "start-server": "npm start --prefix server",
     "start-servercluster": "npm run cluster --prefix server",
     "build-client": "npm run build --prefix client ",
-    "install": "npm-run-all install-client install-server",
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
-    "watch": "npm-run-all --parallel server client",
     "test-client": "npm test --prefix client",
-    "test-server": "npm test --prefix server ",
-    "test": "npm-run-all test-client test-server "
+    "test-server": "npm test --prefix server "
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,4 @@
-const APP_URL = "http://localhost:8000/v1"
+const APP_URL = "v1"
 
 async function httpGetPlanets() {
   // Load planets and return as JSON.
